@@ -1,0 +1,107 @@
+.shelf {
+  margin-bottom: 80px;
+  /* start hidden for scroll-entrance animation */
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Clean label — left accent bar + text, no card/box */
+.shelfLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.shelfLabelAccent {
+  width: 3px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.shelfLabelText {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Outer scroll container — horizontal scroll only, never clip vertically */
+.plankScroller {
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+  /* do not set a fixed height — let content define it */
+}
+
+.plankScroller::-webkit-scrollbar { height: 5px; }
+.plankScroller::-webkit-scrollbar-track { background: transparent; }
+.plankScroller::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+/* Transparent wrapper — padding-top gives hover-lift room */
+.plankWrapper {
+  position: relative;
+  padding-top: 28px; /* room for -10px lift + label tooltip */
+  padding-bottom: 0;
+  min-width: min-content;
+  display: flex;
+  align-items: flex-end;
+  background: transparent;
+  overflow: visible;
+  height: auto; /* never force a height that creates overflow */
+}
+
+.cdRow {
+  display: flex;
+  align-items: flex-end; /* CDs sit on the ledge */
+  padding-right: 32px;
+  overflow: visible;
+}
+
+/* Sleek black metal ledge — sits below the album row */
+.shelfPlank {
+  background: linear-gradient(
+    180deg,
+    #2a2a2a 0%,
+    #1a1a1a 40%,
+    #111111 60%,
+    #222222 100%
+  );
+  height: 28px;
+  border-top: 1px solid #444444;
+  border-bottom: 1px solid #080808;
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.8),
+    0 2px 4px rgba(0,0,0,0.9),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  border-radius: 2px;
+}
+
+/* Divider between groups */
+.divider {
+  width: 1px;
+  height: 60px;
+  background: rgba(255,255,255,0.08);
+  margin: 0 16px;
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+
+.dividerLabel {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.25);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  align-self: flex-end;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}

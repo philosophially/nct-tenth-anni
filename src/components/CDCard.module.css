@@ -1,0 +1,292 @@
+/* ===== SHELF THUMBNAIL ===== */
+.wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: -16px;
+  z-index: 1;
+  transition: z-index 0s;
+}
+
+.wrapper:hover {
+  z-index: 10;
+}
+
+.card {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border-radius: 3px;
+  box-shadow:
+    2px 2px 8px rgba(0,0,0,0.6),
+    inset 0 0 0 1px var(--cd-border);
+  overflow: hidden;
+  transform-origin: bottom center;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Hover: lift up — parent containers must have overflow: visible */
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow:
+    4px 14px 28px rgba(0,0,0,0.7),
+    inset 0 0 0 1px var(--cd-border);
+}
+
+/* Title tag floating above the card on hover */
+.title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  color: #f5f0e8;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  position: absolute;
+  /* sits just above the top edge of the card */
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+}
+
+.wrapper:hover .title {
+  opacity: 1;
+}
+
+/* ===== EXPANDED OVERLAY (portal root → document.body) ===== */
+.expandedOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.expandedInner {
+  position: relative;
+  animation: slideUp 0.25s ease;
+}
+
+.closeBtn {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: var(--text-primary);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  transition: background 0.2s, color 0.2s;
+  z-index: 1002;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: var(--accent);
+  color: #1a1008;
+  border-color: var(--accent);
+}
+
+/* ===== EXPANDED CARD MODAL — show/hide toggle (no 3D transforms) ===== */
+.cardModal {
+  position: relative;
+  z-index: 1001;
+  width: min(90vw, 500px);
+  max-height: min(90vh, 500px);
+  overflow: visible;
+  border-radius: 8px;
+  background: #1a1008;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.9);
+}
+
+/* Fixed height + clip only while back (tracklist) face is open — enables flex scroll */
+.cardModalBackOpen {
+  height: min(90vh, 500px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Both faces occupy the same space, stacked absolutely */
+.faceFront,
+.faceBack {
+  width: 100%;
+  border-radius: 8px;
+  transition: opacity 0.25s ease;
+}
+
+/* FRONT FACE */
+.faceFront {
+  background: #000000;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.faceFront img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  max-height: 60vh;
+  background: #000000;
+  border-radius: 4px 4px 0 0;
+}
+
+.frontInfo {
+  padding: 16px 20px;
+  background: #1a1008;
+  flex-shrink: 0;
+}
+
+.frontTitle {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #f5f0e8;
+}
+
+.frontGroup {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: #a89880;
+  margin-top: 8px;
+}
+
+.frontHint {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--accent);
+  margin-top: 8px;
+}
+
+/* BACK FACE */
+.faceBack {
+  background: #1a1008;
+  padding: 20px 20px 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  border: 1px solid #2a2010;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.backTrackScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.backAlbumTitle {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--accent);
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.trackList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.backTrackScroll::-webkit-scrollbar { width: 4px; }
+.backTrackScroll::-webkit-scrollbar-track { background: transparent; }
+.backTrackScroll::-webkit-scrollbar-thumb { background: #3a3020; border-radius: 2px; }
+
+.trackItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.trackItem:hover {
+  background: rgba(200, 233, 75, 0.1);
+}
+
+.trackNum {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.trackName {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.trackItem:hover .trackName {
+  color: var(--accent);
+}
+
+.flipBackLink {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 12px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  cursor: pointer;
+}
+
+.flipBackLink:hover {
+  color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
