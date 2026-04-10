@@ -191,13 +191,7 @@ const nct127Raw = [
     year: 2018,
     language: "Japanese",
     cover: "/albums/nct-127/nct-127-chain.jpg",
-    tracks: [
-      "Dreaming",
-      "Chain",
-      "Limitless",
-      "Come Back",
-      "100",
-    ],
+    tracks: ["Dreaming", "Chain", "Limitless", "Come Back", "100"],
   },
   {
     id: "nct127-005",
@@ -979,7 +973,7 @@ export const SHELF_CONFIG = [
 export const MOODS = [
   { key: "청량", korean: "#청량", english: "Fresh / Crisp" },
   { key: "설렘", korean: "#설렘", english: "Excitement / Butterflies" },
-  { key: "벅참", korean: "#벅참", english: "Overwhelming" },
+  { key: "벅참", korean: "#벅참", english: "Overwhelming emotion" },
   { key: "신남", korean: "#신남", english: "Hype / Upbeat" },
   { key: "네오", korean: "#네오", english: "Neo" },
   { key: "슬픔", korean: "#슬픔", english: "Sad / Melancholic" },

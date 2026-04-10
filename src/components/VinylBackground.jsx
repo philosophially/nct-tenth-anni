@@ -3,50 +3,50 @@
 const DISCS = [
   {
     size: 420,
-    style: { top: '-100px', right: '-80px' },
-    cover: '/albums/nct-127/nct127-sticker.jpg',
+    style: { top: "-100px", right: "-80px" },
+    cover: "/albums/nct-127/nct127-we-are-superhuman.jpg",
   },
   {
     size: 360,
-    style: { top: '40%', left: '-120px' },
-    cover: '/albums/nct-127/nct127-neo-zone.jpg',
+    style: { top: "40%", left: "-120px" },
+    cover: "/albums/wayv/wayv-kick-back.jpg",
   },
   {
     size: 300,
-    style: { bottom: '10%', right: '5%' },
-    cover: '/albums/nct-dream/nctdream-hot-sauce.jpg',
+    style: { bottom: "10%", right: "5%" },
+    cover: "/albums/nct-dream/nctdream-dream-scape.jpg",
   },
   {
     size: 480,
-    style: { top: '70%', left: '30%' },
-    cover: '/albums/nct-127/nct127-regular-irregular.jpg',
+    style: { top: "70%", left: "30%" },
+    cover: "/albums/nct/nct-universe.jpg",
   },
   {
     size: 260,
-    style: { bottom: '-80px', left: '-60px' },
-    cover: '/albums/nct-dream/nctdream-glitch-mode.jpg',
+    style: { bottom: "-80px", left: "-60px" },
+    cover: "/albums/nct-wish/nct-wish-poppop.jpg",
   },
-]
+];
 
 function VinylDisc({ size, style, cover }) {
-  const cx = size / 2
-  const cy = size / 2
-  const outerR = size / 2 - 1
-  const labelR = 40         // centre label radius (80px diameter)
-  const grooveSpacing = 6
-  const clipId = `clip-${cover.replace(/[^a-z0-9]/gi, '')}`
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerR = size / 2 - 1;
+  const labelR = 40; // centre label radius (80px diameter)
+  const grooveSpacing = 6;
+  const clipId = `clip-${cover.replace(/[^a-z0-9]/gi, "")}`;
 
   // Build concentric groove circles from outerR inward, stopping before label
-  const grooves = []
+  const grooves = [];
   for (let r = outerR; r > labelR + grooveSpacing; r -= grooveSpacing) {
-    grooves.push(r)
+    grooves.push(r);
   }
 
   return (
     <div
       style={{
-        position: 'fixed',
-        pointerEvents: 'none',
+        position: "fixed",
+        pointerEvents: "none",
         zIndex: 0,
         width: size,
         height: size,
@@ -97,7 +97,7 @@ function VinylDisc({ size, style, cover }) {
         <circle cx={cx} cy={cy} r={4} fill="rgba(0,0,0,0.6)" />
       </svg>
     </div>
-  )
+  );
 }
 
 export default function VinylBackground() {
@@ -107,5 +107,5 @@ export default function VinylBackground() {
         <VinylDisc key={i} {...d} />
       ))}
     </>
-  )
+  );
 }
