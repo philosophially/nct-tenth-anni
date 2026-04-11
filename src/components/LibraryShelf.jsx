@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./LibraryShelf.module.css";
 import { MOODS } from "../data/albums";
+import { supabase, supabaseReady } from "../lib/supabase";
 
 const SPINE_COLOURS = [
   "#1a1a2e",
@@ -118,8 +119,69 @@ function EntryModal({ entry, onClose }) {
   );
 }
 
-export default function LibraryShelf({ entries }) {
+export default function LibraryShelf() {
   const [active, setActive] = useState(null);
+  const [entries, setEntries] = useState([]);
+  const [hasMore, setHasMore] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  useEffect(() => {
+    if (!supabaseReady) return;
+
+    let cancelled = false;
+
+    async function loadInitial() {
+      const { data } = await supabase
+        .from("submissions")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(29);
+      if (cancelled) return;
+      const rows = data ?? [];
+      setEntries(rows);
+      setHasMore(rows.length === 29);
+      setOffset(rows.length === 29 ? 29 : 0);
+    }
+
+    loadInitial();
+
+    const channel = supabase
+      .channel("submissions-stream")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "submissions" },
+        (payload) => setEntries((prev) => [payload.new, ...prev]),
+      )
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  async function handleLoadMore() {
+    if (!supabaseReady || loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    try {
+      const from = offset;
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .range(from, from + 28);
+      if (error) return;
+      const batch = data ?? [];
+      if (batch.length > 0) {
+        setEntries((prev) => [...prev, ...batch]);
+      }
+      if (batch.length < 29) setHasMore(false);
+      setOffset((o) => o + 29);
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   return (
     <section className={styles.section} id="community">
@@ -150,6 +212,16 @@ export default function LibraryShelf({ entries }) {
           ))}
         </div>
       </div>
+      {hasMore && (
+        <button
+          type="button"
+          className={styles.loadMoreBtn}
+          onClick={handleLoadMore}
+          disabled={loadingMore}
+        >
+          {loadingMore ? "[ ▸ loading... ]" : "[ ▸ load 29 more ]"}
+        </button>
+      )}
       <div className={styles.shadow} />
 
       {active && <EntryModal entry={active} onClose={() => setActive(null)} />}

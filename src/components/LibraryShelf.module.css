@@ -25,6 +25,9 @@
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--shelf-shadow) transparent;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
 }
 
 .shelfWrapper::-webkit-scrollbar {
@@ -40,6 +43,33 @@
   align-items: flex-end;
   gap: 2px;
   padding-right: 16px;
+  width: max-content;
+  min-width: min-content;
+  flex-shrink: 0;
+}
+
+.loadMoreBtn {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 2px;
+  padding: 4px 10px;
+  margin-top: 8px;
+  display: inline-block;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.loadMoreBtn:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.loadMoreBtn:disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .spine {

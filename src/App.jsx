@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CDShelf from "./components/CDShelf";
 import TemplatePanel from "./components/TemplatePanel";
 import MoodPicker from "./components/MoodPicker";
@@ -20,29 +20,6 @@ export default function App() {
   const [nickname, setNickname] = useState("");
   const [submitState, setSubmitState] = useState("idle");
   const [submitError, setSubmitError] = useState("");
-  const [entries, setEntries] = useState([]);
-
-  useEffect(() => {
-    if (!supabaseReady) return;
-    async function loadEntries() {
-      const { data } = await supabase
-        .from("submissions")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(100);
-      if (data) setEntries(data);
-    }
-    loadEntries();
-    const channel = supabase
-      .channel("submissions-stream")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "submissions" },
-        (payload) => setEntries((prev) => [payload.new, ...prev]),
-      )
-      .subscribe();
-    return () => supabase.removeChannel(channel);
-  }, []);
 
   function handleTrackSelect(info) {
     setPendingTrack(info);
@@ -166,7 +143,7 @@ export default function App() {
               />
             ))}
           </section>
-          <LibraryShelf entries={entries} />
+          <LibraryShelf />
         </main>
 
         <aside className={styles.sidebar}>
