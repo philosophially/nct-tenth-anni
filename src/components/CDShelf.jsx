@@ -50,7 +50,11 @@ export default function CDShelf({ config, onTrackSelect, animDelay = 0 }) {
         <div className={styles.plankWrapper}>
           <div className={styles.cdRow}>
             {albumsByGroup.map((groupAlbums, gi) => (
-              <div key={groups[gi]} style={{ display: 'flex', alignItems: 'flex-end' }}>
+              <div
+                key={groups[gi]}
+                className={styles.cardTrack}
+                style={{ display: 'flex', alignItems: 'flex-end' }}
+              >
                 {dividers && gi > 0 && (
                   <>
                     <div className={styles.divider} />

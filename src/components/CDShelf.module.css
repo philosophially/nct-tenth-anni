@@ -72,11 +72,43 @@
   box-sizing: border-box;
 }
 
+/* Direct parent of CD cards — intrinsic width + touch routing (see mobile pan-x) */
+.cardTrack {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  width: max-content;
+  min-width: min-content;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
-  /* Let the row stay viewport-wide; wide content scrolls inside .cdRow (iOS-friendly) */
+  /*
+   * Single scroll container: .plankScroller (not nested .cdRow).
+   * Inner track uses width: max-content so the row stays intrinsic width
+   * and pans reliably on iOS; avoid flex + 100% width chain swallowing overflow.
+   */
+  /* Flex ancestors (e.g. main.layout) default min-width: auto — allow shrink so
+     .plankScroller is capped to viewport, not content width */
+  .shelf {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .plankScroller {
-    overflow-x: visible;
+    width: 100%;
+    max-width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
     overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
   }
 
   .plankScroller::after {
@@ -92,40 +124,44 @@
   }
 
   .plankWrapper {
-    min-width: 0;
-    width: 100%;
-    max-width: 100%;
+    display: flex;
+    align-items: flex-end;
+    width: max-content;
+    max-width: none;
+    min-width: min-content;
+    overflow: visible;
   }
 
   .cdRow {
-    min-width: 0; /* flex item may shrink so overflow-x can scroll on iOS */
-    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    width: max-content;
+    max-width: none;
+    min-width: min-content;
+    overflow-x: visible;
     overflow-y: visible;
-    -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-    scrollbar-color: #333 transparent;
     padding-right: 24px;
+    box-sizing: border-box;
   }
 
-  .cdRow::-webkit-scrollbar {
+  .plankScroller::-webkit-scrollbar {
     height: 4px;
   }
 
-  .cdRow::-webkit-scrollbar-track {
+  .plankScroller::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  .cdRow::-webkit-scrollbar-thumb {
+  .plankScroller::-webkit-scrollbar-thumb {
     background: #333;
     border-radius: 3px;
   }
 
-  /* Group wrappers from JSX inline flex — keep row from compressing */
-  .cdRow > div {
-    display: flex;
-    align-items: flex-end;
-    flex-shrink: 0;
+  .cardTrack {
+    touch-action: pan-x;
   }
 }
 

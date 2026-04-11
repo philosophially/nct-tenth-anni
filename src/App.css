@@ -27,7 +27,8 @@ body {
   font-size: 16px;
   line-height: 1.5;
   min-height: 100vh;
-  overflow-x: clip;
+  /* default overflow-x: visible — clip/hidden on body breaks nested
+     overflow-x: auto on shelf rows (especially iOS Safari) */
 }
 
 /* ===== TYPOGRAPHY GLOBALS ===== */
