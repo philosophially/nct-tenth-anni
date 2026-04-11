@@ -4,6 +4,7 @@ import TemplatePanel from "./components/TemplatePanel";
 import MoodPicker from "./components/MoodPicker";
 import LibraryShelf from "./components/LibraryShelf";
 import VinylBackground from "./components/VinylBackground";
+import StoreMusic from "./components/StoreMusic";
 import { SHELF_CONFIG, MOODS } from "./data/albums";
 import { supabase, supabaseReady } from "./lib/supabase";
 import styles from "./App.module.css";
@@ -233,6 +234,8 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <StoreMusic />
     </div>
   );
 }
