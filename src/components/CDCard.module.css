@@ -70,6 +70,22 @@
   opacity: 1;
 }
 
+@media (max-width: 768px) {
+  .wrapper {
+    margin-right: -12px;
+    scroll-snap-align: start;
+  }
+
+  .card {
+    width: 90px;
+    height: 90px;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+  }
+}
+
 /* ===== EXPANDED OVERLAY (portal root → document.body) ===== */
 .expandedOverlay {
   position: fixed;

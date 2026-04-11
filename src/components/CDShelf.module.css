@@ -30,13 +30,17 @@
   color: var(--accent);
 }
 
-/* Outer scroll container — horizontal scroll only, never clip vertically */
+/* Outer wrapper — desktop: horizontal scroll here; mobile: scroll on .cdRow */
 .plankScroller {
+  position: relative;
   overflow-x: auto;
   overflow-y: visible;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   scrollbar-width: thin;
   scrollbar-color: #333 transparent;
-  /* do not set a fixed height — let content define it */
+  -webkit-overflow-scrolling: touch;
 }
 
 .plankScroller::-webkit-scrollbar { height: 5px; }
@@ -58,9 +62,71 @@
 
 .cdRow {
   display: flex;
+  flex-direction: row;
   align-items: flex-end; /* CDs sit on the ledge */
   padding-right: 32px;
-  overflow: visible;
+  overflow-x: visible;
+  overflow-y: visible;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  /* Let the row stay viewport-wide; wide content scrolls inside .cdRow (iOS-friendly) */
+  .plankScroller {
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+
+  .plankScroller::after {
+    content: '';
+    position: absolute;
+    top: 28px;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+    pointer-events: none;
+    z-index: 1;
+    background: linear-gradient(to left, #0f0f0f 0%, rgba(15, 15, 15, 0) 100%);
+  }
+
+  .plankWrapper {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .cdRow {
+    min-width: 0; /* flex item may shrink so overflow-x can scroll on iOS */
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+    padding-right: 24px;
+  }
+
+  .cdRow::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .cdRow::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .cdRow::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+  }
+
+  /* Group wrappers from JSX inline flex — keep row from compressing */
+  .cdRow > div {
+    display: flex;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
 }
 
 /* Sleek black metal ledge — sits below the album row */
