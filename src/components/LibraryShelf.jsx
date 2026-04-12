@@ -4,28 +4,37 @@ import { MOODS } from "../data/albums";
 import { supabase, supabaseReady } from "../lib/supabase";
 
 const SPINE_COLOURS = [
-  "#1a1a2e",
-  "#16213e",
-  "#2d1b33",
-  "#1a2a1a",
-  "#2a1a1a",
-  "#1a2a2a",
-  "#2a2a1a",
-  "#1e1a2a",
-  "#2a1e1a",
-  "#0f1a2a",
-  "#1a0f1a",
-  "#2a1a0f",
+  "#6B3FA0",
+  "#2E86AB",
+  "#A23B72",
+  "#F18F01",
+  "#C73E1D",
+  "#3B1F2B",
+  "#44BBA4",
+  "#E94F37",
+  "#393E41",
+  "#2541B2",
+  "#7B2D8B",
+  "#1B998B",
+  "#E84855",
+  "#5C4033",
+  "#0D7377",
+  "#8B2FC9",
+  "#D62246",
+  "#4A90D9",
+  "#2D6A4F",
+  "#C05299",
 ];
 
 const SPINE_FONTS = [
-  "Bebas Neue",
-  "Oswald",
-  "Rajdhani",
-  "Barlow Condensed",
-  "IBM Plex Mono",
-  "Playfair Display",
-  "Anton",
+  "Shadows Into Light",
+  "Caveat Brush",
+  "Schoolbell",
+  "Margarine",
+  "Coming Soon",
+  "Finger Paint",
+  "Mynerve",
+  "Indie Flower",
 ];
 
 function spineColourForEntry(entry) {
@@ -34,9 +43,24 @@ function spineColourForEntry(entry) {
   return SPINE_COLOURS[code % SPINE_COLOURS.length];
 }
 
+function detectScript(text) {
+  if (!text) return "latin";
+  if (/[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]/.test(text))
+    return "korean";
+  if (/[\u0E00-\u0E7F]/.test(text)) return "thai";
+  if (/[\u3040-\u30FF\u4E00-\u9FFF]/.test(text)) return "japanese";
+  return "latin";
+}
+
 function spineFontForEntry(entry) {
+  const script = detectScript(entry.nickname);
+  if (script === "korean") return "Gamja Flower";
+  if (script === "thai") return "Playpen Sans Thai";
+  if (script === "japanese") return "Yomogi";
   const idStr = String(entry.id);
-  const code = idStr.length > 1 ? idStr.charCodeAt(1) : idStr.charCodeAt(0);
+  const code = idStr.length > 1
+    ? idStr.charCodeAt(1)
+    : idStr.charCodeAt(0);
   return SPINE_FONTS[code % SPINE_FONTS.length];
 }
 
@@ -191,25 +215,33 @@ export default function LibraryShelf() {
           {entries.length === 0 && (
             <div className={styles.empty}>No entries yet — be the first!</div>
           )}
-          {entries.map((entry) => (
-            <button
-              key={entry.id}
-              type="button"
-              className={styles.spine}
-              style={{ backgroundColor: spineColourForEntry(entry) }}
-              onClick={() => setActive(entry)}
-              title={entry.nickname}
-            >
-              <span
-                className={styles.spineText}
-                style={{
-                  fontFamily: `'${spineFontForEntry(entry)}', sans-serif`,
-                }}
+          {entries.map((entry) => {
+            const script = detectScript(entry.nickname);
+            const isNativeVertical =
+              script === "korean" ||
+              script === "thai" ||
+              script === "japanese";
+            return (
+              <button
+                key={entry.id}
+                type="button"
+                className={styles.spine}
+                style={{ backgroundColor: spineColourForEntry(entry) }}
+                onClick={() => setActive(entry)}
+                title={entry.nickname}
               >
-                {entry.nickname}
-              </span>
-            </button>
-          ))}
+                <span
+                  className={styles.spineText}
+                  style={{
+                    fontFamily: `'${spineFontForEntry(entry)}', sans-serif`,
+                    transform: isNativeVertical ? "none" : "rotate(180deg)",
+                  }}
+                >
+                  {entry.nickname}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
       {hasMore && (
