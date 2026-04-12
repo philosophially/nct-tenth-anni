@@ -47,7 +47,6 @@ function detectScript(text) {
   if (!text) return "latin";
   if (/[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]/.test(text))
     return "korean";
-  if (/[\u0E00-\u0E7F]/.test(text)) return "thai";
   if (/[\u3040-\u30FF\u4E00-\u9FFF]/.test(text)) return "japanese";
   return "latin";
 }
@@ -55,7 +54,6 @@ function detectScript(text) {
 function spineFontForEntry(entry) {
   const script = detectScript(entry.nickname);
   if (script === "korean") return "Gamja Flower";
-  if (script === "thai") return "Playpen Sans Thai";
   if (script === "japanese") return "Yomogi";
   const idStr = String(entry.id);
   const code = idStr.length > 1
@@ -218,9 +216,7 @@ export default function LibraryShelf() {
           {entries.map((entry) => {
             const script = detectScript(entry.nickname);
             const isNativeVertical =
-              script === "korean" ||
-              script === "thai" ||
-              script === "japanese";
+              script === "korean" || script === "japanese";
             return (
               <button
                 key={entry.id}

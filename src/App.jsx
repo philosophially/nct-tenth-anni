@@ -235,6 +235,10 @@ export default function App() {
         </div>
       )}
 
+      <footer className={`${styles.heroEyebrow} ${styles.siteFooter}`}>
+        · made with love for NCTzens from an NCTzen 💚 ·
+      </footer>
+
       <StoreMusic />
     </div>
   );
